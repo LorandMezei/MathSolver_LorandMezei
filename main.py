@@ -15,21 +15,22 @@ class Tokenizer():
 
     #https://stackoverflow.com/questions/20805614/tokenize-a-mathematical-expression-in-python, by koffein
     def tokenize_math_exp(self, exp):
-        return re.findall(r"(\b\w*[\.]?\w+\b|[\(\)\+\*\-\/])", exp)
+        return re.findall(r"(\b\w*[\.]?\w+\b|[\(\)\+\*\-\^\/])", exp)
 
 #https://runestone.academy/runestone/books/published/pythonds/Trees/ParseTree.html
 class Evaluator():
     def evaluate(self, tree):
-        opers = {'+': operator.add,
-                 '-': operator.sub,
-                 '*': operator.mul,
-                 '/': operator.truediv}
+        operators = {'+': operator.add,
+                     '-': operator.sub,
+                     '*': operator.mul,
+                     '/': operator.truediv,
+                     '^': operator.pow,}
 
         left_child = tree.getLeftChild()
         right_child = tree.getRightChild()
 
         if left_child and right_child:
-            function = opers[tree.getRootVal()]
+            function = operators[tree.getRootVal()]
             return function(float(self.evaluate(left_child)), float(self.evaluate(right_child)))
         else:
             return tree.getRootVal()
@@ -48,7 +49,7 @@ class ExpTreeBuilder():
                 parent_stack.push(current_tree)
                 current_tree = current_tree.getLeftChild()
 
-            elif i in ['+', '-', '*', '/', 'sin', 'tan', 'cos']:
+            elif i in ['+', '-', '*', '/', '^']:
                 current_tree.setRootVal(i)
                 current_tree.insertRight('')
                 parent_stack.push(current_tree)
@@ -57,7 +58,7 @@ class ExpTreeBuilder():
             elif i == ')':
                 current_tree = parent_stack.pop()
 
-            elif i not in ['+', '-', '*', '/', 'sin', 'tan', 'cos', ')']:
+            elif i not in ['+', '-', '*', '/', '^', ')']:
                 current_tree.setRootVal(i)
                 parent = parent_stack.pop()
                 current_tree = parent
@@ -66,7 +67,7 @@ class ExpTreeBuilder():
 
 def main():
     tk = Tokenizer()
-    exp = tk.tokenize_math_exp("((2*3)+5)")
+    exp = tk.tokenize_math_exp("((5^2)*(4-2))")
 
     etb = ExpTreeBuilder()
     tree = etb.build_exp_tree(exp)
