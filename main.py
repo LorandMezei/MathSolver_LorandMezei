@@ -9,7 +9,7 @@ import math
 class Tokenizer():
     def tokenize_math_eq(self, eq):
         # Split the mathematical equation into two parts: left of equals sign, right of equals sign.
-        tokens = np.array(eq.split('=')) #tokens[0] (left side) and tokens[1] (right side)
+        tokens = np.array(eq.split('='))  #tokens[0] (left side) and tokens[1] (right side)
         # Create an array that holds the tokens of the left side.
         tokens_left = np.array([tokens[0]])
         # Create an array that holds the tokens of the right side. This will further tokenize the right side expression.
@@ -23,8 +23,8 @@ class Tokenizer():
         # Should split expression by operands, operators, and functions.
         return re.findall(r"(\b\w*[\.]?\w+\b|[\(\)\+\*\-\^\/])", exp)
 
-#https://runestone.academy/runestone/books/published/pythonds/Trees/ParseTree.html
 class Evaluator():
+    # https://runestone.academy/runestone/books/published/pythonds/Trees/ParseTree.html
     def evaluate(self, tree):
         # Dictionary of possible binary operators in an expression.
         # Stores the character value, and the operator to perform for each character's operator.
@@ -42,13 +42,39 @@ class Evaluator():
         # If both left child and right child are not empty (meaning root value is an operator).
         if left_child and right_child:
             # Select the appropriate operator for the current operator.
-            function = operators[tree.getRootVal()]
+            op = operators[tree.getRootVal()]
             # Apply the operator to both the left child's value and the right child's value.
             # Recur into left child and right child.
-            return function(float(self.evaluate(left_child)), float(self.evaluate(right_child)))
+            return op(float(self.evaluate(left_child)), float(self.evaluate(right_child)))
         else:
-            # Else the root value is not an operator.
             return tree.getRootVal()
+
+    # https://runestone.academy/runestone/books/published/pythonds/Trees/ParseTree.html
+    # Evaluate tree with variables.
+    def evaluate_vars(self, tree, vars):
+        # Dictionary of possible binary operators in an expression.
+        # Stores the character value, and the operator to perform for each character's operator.
+        operators = {'+': operator.add,
+                     '-': operator.sub,
+                     '*': operator.mul,
+                     '/': operator.truediv,
+                     '^': operator.pow,}
+
+        # Get the left child of the tree.
+        left_child = tree.getLeftChild()
+        # Get the right child of the tree.
+        right_child = tree.getRightChild()
+
+        # If both left child and right child are not empty (meaning root value is an operator).
+        if left_child and right_child:
+            # Select the appropriate operator for the current operator.
+            op = operators[tree.getRootVal()]
+            # Apply the operator to both the left child's value and the right child's value.
+            # Recur into left child and right child.
+            print("-----------------")
+            return op(self.evaluate_vars(left_child, vars), self.evaluate_vars(right_child, vars))
+        else:
+            return vars[tree.getRootVal()]
 
 class Printer():
     # https://runestone.academy/runestone/books/published/pythonds/Trees/ParseTree.html
@@ -94,10 +120,10 @@ class ExpTreeBuilder():
     # https://runestone.academy/runestone/books/published/pythonds/Trees/ParseTree.html
     # Build a binary expression tree from a fully parenthesized mathematical expression.
     def build_exp_tree(self, exp):
-        parent_stack = Stack() # Stack to hold the parent pointers.
-        exp_tree = BinaryTree('') # Empty expression tree using a binary tree.
-        parent_stack.push(exp_tree) # Push the empty expression tree into the parent stack.
-        current_tree = exp_tree # Current tree is assigned to the empty expression tree.
+        parent_stack = Stack()  # Stack to hold the parent pointers.
+        exp_tree = BinaryTree('')  # Empty expression tree using a binary tree.
+        parent_stack.push(exp_tree)  # Push the empty expression tree into the parent stack.
+        current_tree = exp_tree  # Current tree is assigned to the empty expression tree.
 
         # For each character in the mathematical expression.
         for i in exp:
@@ -112,17 +138,11 @@ class ExpTreeBuilder():
                 current_tree.insertRight('')
                 parent_stack.push(current_tree)
                 current_tree = current_tree.getRightChild()
-            # If current character is a function.
-            elif i in ['sin', 'cos', 'tan']:
-                current_tree.setRootVal(i)
-                current_tree.insertRight('')
-                parent_stack.push(current_tree)
-                current_tree = current_tree.getRightChild()
             # If current character is a right parenthesis.
             elif i == ')':
                 current_tree = parent_stack.pop()
             # If current character is not an operator and not a right parenthesis.
-            elif i not in ['+', '-', '*', '/', '^', ')', 'sin', 'cos', 'tan']:
+            elif i not in ['+', '-', '*', '/', '^', ')']:
                 current_tree.setRootVal(i)
                 parent = parent_stack.pop()
                 current_tree = parent
@@ -134,10 +154,12 @@ def main():
     exp1 = "((cos(x))*(sin(x)))"
     exp2 = "((1+2)*(3+4))"
     exp3 = "(cos(1))"
+    exp4 = "(a+(b+c))"
+    exp5 = "(1*(2*3))"
 
     # Tokenize mathematical expression.
     tk = Tokenizer()
-    exp = tk.tokenize_math_exp(exp2)
+    exp = tk.tokenize_math_exp(exp4)  #<--------------------------------------------------------------------------------
     print(exp)
 
     # Build the expression tree from the tokenized mathematical expression.
@@ -146,11 +168,13 @@ def main():
 
     # Traverse and print the expression tree in order.
     pr = Printer()
+    pr.inorder(tree)
     pr.print2D(tree)
 
     # Traverse and evaluate the expression tree in order.
+    vars = {'a':1, 'b':2, 'c':3}
     ev = Evaluator()
-    value = ev.evaluate(tree)
+    value = ev.evaluate_vars(tree, vars)
     print(value)
 
 if __name__ == "__main__":
