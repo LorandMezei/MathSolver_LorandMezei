@@ -1,10 +1,11 @@
 import re
 import numpy as np
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 from pythonds.basic import Stack
 from pythonds.trees import BinaryTree
 import operator
-import math
 
 class Tokenizer():
     def tokenize_math_eq(self, eq):
@@ -66,7 +67,7 @@ class Evaluator():
         right_child = tree.getRightChild()
 
         # If both left child and right child are not empty (meaning root value is an operator).
-        if left_child and right_child: #
+        if left_child and right_child:
             # Select the appropriate operator for the current operator.
             op = operators[tree.getRootVal()]
             # Apply the operator to both the left child's value and the right child's value.
@@ -75,13 +76,9 @@ class Evaluator():
         else:
             # If operand is a variable.
             if tree.getRootVal() in vars:
-                print("-----")
-                print(vars[tree.getRootVal()])
                 return vars[tree.getRootVal()]
             # If operator is a digit.
             elif tree.getRootVal() not in vars:
-                print("*****")
-                print(tree.getRootVal())
                 return tree.getRootVal()
 
 class Printer():
@@ -124,9 +121,21 @@ class Printer():
         # Pass initial space count as 0
         self.print2DUtil(root, 0)
 
+class Grapher():
+    def x_1to10(self, tree, ev):
+        vars = {'x': 1}
+        x = np.array([])
+        y = np.array([])
+        for i in range(1, 11):
+            value = ev.evaluate_vars(tree, vars)
+            x = np.append(x, i)
+            y = np.append(y, value)
+            vars['x'] += 1
+        return [x, y]
+
 class ExpTreeBuilder():
     # https://runestone.academy/runestone/books/published/pythonds/Trees/ParseTree.html
-    # Build a binary expression tree from a fully parenthesized mathematical expression.
+    # Build a binary expression tree from a !FULLY PARENTHESIZED! mathematical expression.
     def build_exp_tree(self, exp):
         parent_stack = Stack()  # Stack to hold the parent pointers.
         exp_tree = BinaryTree('')  # Empty expression tree using a binary tree.
@@ -162,12 +171,14 @@ def main():
     exp1 = "((cos(x))*(sin(x)))"
     exp2 = "((1+2)*(3+4))"
     exp3 = "(cos(1))"
-    exp4 = "(a+(b+5))"
+    exp4 = "(x+((x+5)^2))"
     exp5 = "(1*(2*3))"
+    exp6 = "(x)"
+    exp7 = "(x^2)"
 
     # Tokenize mathematical expression.
     tk = Tokenizer()
-    exp = tk.tokenize_math_exp(exp4)  #<--------------------------------------------------------------------------------
+    exp = tk.tokenize_math_exp(exp7)  #<--------------------------------------------------------------------------------
     print(exp)
 
     # Build the expression tree from the tokenized mathematical expression.
@@ -181,9 +192,10 @@ def main():
 
     # Traverse and evaluate the expression tree in order.
     ev = Evaluator()
-    vars = {'a': 1, 'b': 2}
-    value = ev.evaluate_vars(tree, vars)
-    print(value)
+    gr = Grapher()
+    graph_values = gr.x_1to10(tree, ev)
+    plt.plot(graph_values[0], graph_values[1])
+    plt.show()
 
 if __name__ == "__main__":
     main()
