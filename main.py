@@ -66,7 +66,7 @@ class Evaluator():
         right_child = tree.getRightChild()
 
         # If both left child and right child are not empty (meaning root value is an operator).
-        if left_child and right_child:
+        if left_child and right_child: #
             # Select the appropriate operator for the current operator.
             op = operators[tree.getRootVal()]
             # Apply the operator to both the left child's value and the right child's value.
