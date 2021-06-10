@@ -71,10 +71,18 @@ class Evaluator():
             op = operators[tree.getRootVal()]
             # Apply the operator to both the left child's value and the right child's value.
             # Recur into left child and right child.
-            print("-----------------")
-            return op(self.evaluate_vars(left_child, vars), self.evaluate_vars(right_child, vars))
+            return op(float(self.evaluate_vars(left_child, vars)), float(self.evaluate_vars(right_child, vars)))
         else:
-            return vars[tree.getRootVal()]
+            # If operand is a variable.
+            if tree.getRootVal() in vars:
+                print("-----")
+                print(vars[tree.getRootVal()])
+                return vars[tree.getRootVal()]
+            # If operator is a digit.
+            elif tree.getRootVal() not in vars:
+                print("*****")
+                print(tree.getRootVal())
+                return tree.getRootVal()
 
 class Printer():
     # https://runestone.academy/runestone/books/published/pythonds/Trees/ParseTree.html
@@ -89,7 +97,7 @@ class Printer():
     # It does reverse inorder traversal
     def print2DUtil(self, root, space):
         # Base case
-        if (root == None):
+        if root == None:
             return
 
         # Increase distance between levels
@@ -154,7 +162,7 @@ def main():
     exp1 = "((cos(x))*(sin(x)))"
     exp2 = "((1+2)*(3+4))"
     exp3 = "(cos(1))"
-    exp4 = "(a+(b+c))"
+    exp4 = "(a+(b+5))"
     exp5 = "(1*(2*3))"
 
     # Tokenize mathematical expression.
@@ -172,8 +180,8 @@ def main():
     pr.print2D(tree)
 
     # Traverse and evaluate the expression tree in order.
-    vars = {'a':1, 'b':2, 'c':3}
     ev = Evaluator()
+    vars = {'a': 1, 'b': 2}
     value = ev.evaluate_vars(tree, vars)
     print(value)
 
