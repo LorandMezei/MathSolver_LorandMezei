@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from pythonds.basic import Stack
 from pythonds.trees import BinaryTree
 import operator
+import math
 
 class Tokenizer():
     def tokenize_math_eq(self, eq):
@@ -59,7 +60,16 @@ class Evaluator():
                      '-': operator.sub,
                      '*': operator.mul,
                      '/': operator.truediv,
-                     '^': operator.pow,}
+                     '^': operator.pow}
+        # Dictionary of possible unary functions in an expression.
+        # Stores the character value, and the function to perform for each string's function.
+        functions = {'sin': math.sin,
+                     'cos': math.cos,
+                     'tan': math.tan,
+                     'arcsin': math.asin,
+                     'arccos': math.acos,
+                     'arctan': math.atan,
+                     'sqrt': math.sqrt}
 
         # Get the left child of the tree.
         left_child = tree.getLeftChild()
@@ -68,11 +78,21 @@ class Evaluator():
 
         # If both left child and right child are not empty (meaning root value is an operator).
         if left_child and right_child:
-            # Select the appropriate operator for the current operator.
-            op = operators[tree.getRootVal()]
-            # Apply the operator to both the left child's value and the right child's value.
-            # Recur into left child and right child.
-            return op(float(self.evaluate_vars(left_child, vars)), float(self.evaluate_vars(right_child, vars)))
+            # If operator is a unary function.
+            if is_unary(tree.getRootVal()):
+                # Select the appropriate function for the current operator.
+                fun = functions[tree.getRootVal()]
+                # Apply the operator to only the right child.
+                # Recur into right child only.
+                return fun(float(self.evaluate_vars(right_child, vars)))
+            # Operator is binary.
+            else:
+                # Select the appropriate operator for the current operator.
+                op = operators[tree.getRootVal()]
+                # Apply the operator to both the left child's value and the right child's value.
+                # Recur into left child and right child.
+                return op(float(self.evaluate_vars(left_child, vars)), float(self.evaluate_vars(right_child, vars)))
+        # Is a leaf node (meaning root value is not an operator).
         else:
             # If operand is a variable.
             if tree.getRootVal() in vars:
@@ -80,46 +100,6 @@ class Evaluator():
             # If operator is a digit.
             elif tree.getRootVal() not in vars:
                 return tree.getRootVal()
-
-class Printer():
-    # https://runestone.academy/runestone/books/published/pythonds/Trees/ParseTree.html
-    def inorder(self, tree):
-        if tree != None:
-            self.inorder(tree.getLeftChild())
-            print("'" + tree.getRootVal() + "'")
-            self.inorder(tree.getRightChild())
-
-    # https: // www.geeksforgeeks.org / print - binary - tree - 2 - dimensions /
-    # Function to print binary tree in 2D
-    # It does reverse inorder traversal
-    def print2DUtil(self, root, space):
-        # Base case
-        if root == None:
-            return
-
-        # Increase distance between levels
-        space += self.COUNT[0]
-
-        # Process right child first
-        self.print2DUtil(root.getRightChild(), space)
-
-        # Print current node after space
-        # count
-        print()
-        for i in range(self.COUNT[0], space):
-            print(end=" ")
-        print(root.getRootVal())
-
-        # Process left child
-        self.print2DUtil(root.getLeftChild(), space)
-
-    # https: // www.geeksforgeeks.org / print - binary - tree - 2 - dimensions /
-    # Wrapper over print2DUtil()
-    COUNT = [10]
-    def print2D(self, root):
-        # space=[0]
-        # Pass initial space count as 0
-        self.print2DUtil(root, 0)
 
 class Grapher():
     def x_1to10(self, tree, ev):
@@ -138,20 +118,29 @@ class ExpTreeBuilder():
     # Build a binary expression tree from a !FULLY PARENTHESIZED! mathematical expression.
     def build_exp_tree(self, exp):
         parent_stack = Stack()  # Stack to hold the parent pointers.
-        exp_tree = BinaryTree('')  # Empty expression tree using a binary tree.
-        parent_stack.push(exp_tree)  # Push the empty expression tree into the parent stack.
-        current_tree = exp_tree  # Current tree is assigned to the empty expression tree.
+        current_tree = BinaryTree('')  # Empty expression tree using a binary tree.
+        parent_stack.push(current_tree)  # Push the empty expression tree into the parent stack.
 
         # For each character in the mathematical expression.
+        # Parenthesis do not get stored in the expression tree.
         for i in exp:
             # If current character is a left parenthesis.
             if i == '(':
+                # Create an empty left child.
                 current_tree.insertLeft('')
                 parent_stack.push(current_tree)
                 current_tree = current_tree.getLeftChild()
-            # If current character is an operator.
-            elif i in ['+', '-', '*', '/', '^']:
+            # If current character is a binary operator.
+            elif is_binary(i):
                 current_tree.setRootVal(i)
+                # Create an empty right child.
+                current_tree.insertRight('')
+                parent_stack.push(current_tree)
+                current_tree = current_tree.getRightChild()
+            # If current string is a unary function.
+            elif is_unary(i):
+                current_tree.setRootVal(i)
+                # Create an empty right child.
                 current_tree.insertRight('')
                 parent_stack.push(current_tree)
                 current_tree = current_tree.getRightChild()
@@ -159,43 +148,57 @@ class ExpTreeBuilder():
             elif i == ')':
                 current_tree = parent_stack.pop()
             # If current character is not an operator and not a right parenthesis.
-            elif i not in ['+', '-', '*', '/', '^', ')']:
+            # Digit or variable.
+            elif not is_unary(i) and not is_binary(i) and i != ')':
                 current_tree.setRootVal(i)
+                # Take parent out of the stack.
                 parent = parent_stack.pop()
+                # Go back to the parent node.
                 current_tree = parent
         # Return the completed expression tree.
-        return exp_tree
+        return current_tree
+
+def is_unary(i):
+    if i in ['sin', 'cos', 'tan', 'arcsin', 'arccos', 'arctan', 'sqrt']:
+        return True
+    return False
+
+def is_binary(i):
+    if i in ['+', '-', '*', '/', '^']:
+        return True
+    return False
 
 def main():
     # Expression examples.
-    exp1 = "((cos(x))*(sin(x)))"
+    exp1 = "((cos(1))*(sin(1)) + (1-2))"
     exp2 = "((1+2)*(3+4))"
-    exp3 = "(cos(1))"
+    exp3 = "(cos(x))"
     exp4 = "(x+((x+5)^2))"
     exp5 = "(1*(2*3))"
     exp6 = "(x)"
-    exp7 = "(x^2)"
+    exp7 = "((-x) + 1)"
 
     # Tokenize mathematical expression.
     tk = Tokenizer()
-    exp = tk.tokenize_math_exp(exp7)  #<--------------------------------------------------------------------------------
-    print(exp)
+    exp = tk.tokenize_math_exp(exp2)  #<--------------------------------------------------------------------------------
 
     # Build the expression tree from the tokenized mathematical expression.
     etb = ExpTreeBuilder()
     tree = etb.build_exp_tree(exp)
 
     # Traverse and print the expression tree in order.
-    pr = Printer()
-    pr.inorder(tree)
-    pr.print2D(tree)
+    #pr = Printer()
+    #pr.inorder(tree)
+    #pr.print2D(tree)
 
     # Traverse and evaluate the expression tree in order.
-    ev = Evaluator()
-    gr = Grapher()
-    graph_values = gr.x_1to10(tree, ev)
-    plt.plot(graph_values[0], graph_values[1])
-    plt.show()
+    #ev = Evaluator()
+    #value = ev.evaluate_vars(tree, {'x': 1})
+    #print(value)
+    #gr = Grapher()
+    #graph_values = gr.x_1to10(tree, ev)
+    #plt.plot(graph_values[0], graph_values[1])
+    #plt.show()
 
 if __name__ == "__main__":
     main()
