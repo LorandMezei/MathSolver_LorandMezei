@@ -15,7 +15,7 @@ def main():
 
     # Tokenize mathematical expression.
     tk = Tokenizer()
-    exp = tk.tokenize_math_exp(exp6)  #<--------------------------------------------------------------------------------
+    exp = tk.tokenize_math_exp(exp4)  #<--------------------------------------------------------------------------------
 
     # Build the expression tree from the tokenized mathematical expression.
     etb = ExpTreeBuilder()
