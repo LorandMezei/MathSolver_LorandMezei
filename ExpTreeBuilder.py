@@ -45,7 +45,7 @@ class ExpTreeBuilder():
 
             # If current character is a right parenthesis.
             elif i == ')':
-                # Move the pointer of the current tree point to the top tree in the parent stack.
+                # Move the pointer of the current tree to point to the top tree in the parent stack.
                 current_tree = parent_stack.pop()
 
             # If current character is not an operator and not a right parenthesis.
