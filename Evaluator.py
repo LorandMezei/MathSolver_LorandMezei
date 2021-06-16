@@ -81,3 +81,13 @@ class Evaluator():
             # If operator is a digit.
             elif tree.getRootVal() not in vars:
                 return tree.getRootVal()
+
+def is_unary(i):
+    if i in ['sin', 'cos', 'tan', 'arcsin', 'arccos', 'arctan', 'sqrt']:
+        return True
+    return False
+
+def is_binary(i):
+    if i in ['+', '-', '*', '/', '^']:
+        return True
+    return False
