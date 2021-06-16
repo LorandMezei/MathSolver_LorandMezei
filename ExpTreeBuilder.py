@@ -3,7 +3,7 @@ from pythonds.trees import BinaryTree
 
 class ExpTreeBuilder():
     # https://runestone.academy/runestone/books/published/pythonds/Trees/ParseTree.html
-    # Build a binary expression tree from a !FULLY PARENTHESIZED! mathematical expression.
+    # Build a binary expression tree from a TOKENIZED FULLY PARENTHESIZED mathematical expression.
     def build_exp_tree(self, exp):
         parent_stack = Stack()  # Stack to hold the pointers to the current tree's parents.
         current_tree = BinaryTree('')  # Empty string expression tree using a binary tree that will start as the current tree.
