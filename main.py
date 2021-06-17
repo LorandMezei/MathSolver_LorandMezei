@@ -25,12 +25,13 @@ def main():
     value = Evaluator.evaluate_vars(tree, {'x': 1})
     print(value)
 
+    # Graph the expression.
     graph_values = Grapher.x_interval(tree)
     plt.plot(graph_values[0], graph_values[1])
     plt.xlabel("x")
     plt.ylabel("y")
     plt.title("(x+((x+5)^2))")
-    plt.show() #
+    plt.show()
 
 if __name__ == "__main__":
     main()

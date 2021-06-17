@@ -8,7 +8,7 @@ class Grapher():
         vars = {'x': 1}
         x = np.array([])
         y = np.array([])
-        for i in range(1, 101): #
+        for i in range(1, 101):
             value = Evaluator.evaluate_vars(tree, vars)
             x = np.append(x, i)
             y = np.append(y, value)
