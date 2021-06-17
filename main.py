@@ -5,7 +5,7 @@ from Grapher import Grapher
 
 def main():
     # Expression examples.
-    exp1 = "((cos(x)) * (sin(y)))"
+    exp1 = "((cos(2*x)) * (sin(3/y)))"
     exp2 = "((1+2)*(3+4))"
     exp3 = "(cos(2*x))"
     exp4 = "(x+((x+5)^2))"

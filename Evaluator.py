@@ -31,24 +31,6 @@ class Evaluator():
     # https://runestone.academy/runestone/books/published/pythonds/Trees/ParseTree.html
     # Evaluate tree with variables.
     def evaluate_vars(self, tree, vars):
-        # Dictionary of possible binary operators in an expression.
-        # Stores the character value, and the operator to perform for each character's operator.
-        operators = {'+': operator.add,
-                     '-': operator.sub,
-                     '*': operator.mul,
-                     '/': operator.truediv,
-                     '^': operator.pow}
-
-        # Dictionary of possible unary functions in an expression.
-        # Stores the character value, and the function to perform for each string's function.
-        functions = {'sin': math.sin,
-                     'cos': math.cos,
-                     'tan': math.tan,
-                     'arcsin': math.asin,
-                     'arccos': math.acos,
-                     'arctan': math.atan,
-                     'sqrt': math.sqrt}
-
         # Get the left child of the tree.
         left_child = tree.getLeftChild()
         # Get the right child of the tree.
@@ -59,15 +41,15 @@ class Evaluator():
             # If operator is a unary function.
             if is_unary(tree.getRootVal()):
                 # Select the appropriate function for the current operator.
-                fun = functions[tree.getRootVal()]
+                fun = get_unary(tree.getRootVal())
                 # Apply the operator to only the right child.
                 # Recur into right child only.
                 return fun(float(self.evaluate_vars(right_child, vars)))
 
             # Operator is binary.
-            else:
+            elif is_binary(tree.getRootVal()):
                 # Select the appropriate operator for the current operator.
-                op = operators[tree.getRootVal()]
+                op = get_binary(tree.getRootVal())
                 # Apply the operator to both the left child's value and the right child's value.
                 # Recur into left child and right child.
                 return op(float(self.evaluate_vars(left_child, vars)), float(self.evaluate_vars(right_child, vars)))
@@ -82,12 +64,38 @@ class Evaluator():
             elif tree.getRootVal() not in vars:
                 return tree.getRootVal()
 
-def is_unary(i):
-    if i in ['sin', 'cos', 'tan', 'arcsin', 'arccos', 'arctan', 'sqrt']:
+def is_unary(x):
+    if x in ['sin', 'cos', 'tan', 'arcsin', 'arccos', 'arctan', 'sqrt']:
         return True
     return False
 
-def is_binary(i):
-    if i in ['+', '-', '*', '/', '^']:
+def is_binary(x):
+    if x in ['+', '-', '*', '/', '^']:
         return True
     return False
+
+def get_unary(x):
+    # Dictionary of possible unary functions in an expression.
+    # Stores the character value, and the function to perform for each string's function.
+    functions = {'sin': math.sin,
+                 'cos': math.cos,
+                 'tan': math.tan,
+                 'arcsin': math.asin,
+                 'arccos': math.acos,
+                 'arctan': math.atan,
+                 'sqrt': math.sqrt}
+    # Select the appropriate function for the current operator.
+    return functions[x]
+
+def get_binary(x):
+    # Dictionary of possible binary operators in an expression.
+    # Stores the character value, and the operator to perform for each character's operator.
+    operators = {'+': operator.add,
+                 '-': operator.sub,
+                 '*': operator.mul,
+                 '/': operator.truediv,
+                 '^': operator.pow}
+    # Select the appropriate function for the current operator.
+    return operators[x]
+
+
