@@ -30,7 +30,7 @@ def main():
     plt.xlabel("x")
     plt.ylabel("y")
     plt.title("(x+((x+5)^2))")
-    plt.show()
+    plt.show() #
 
 if __name__ == "__main__":
     main()
