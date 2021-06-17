@@ -1,3 +1,4 @@
+from matplotlib import pyplot as plt
 from Tokenizer import Tokenizer
 from ExpTreeBuilder import ExpTreeBuilder
 from Evaluator import Evaluator
@@ -24,9 +25,12 @@ def main():
     value = Evaluator.evaluate_vars(tree, {'x': 1})
     print(value)
 
-    #graph_values = Grapher.x_1to10(tree, ev)
-    #plt.plot(graph_values[0], graph_values[1])
-    #plt.show()
+    graph_values = Grapher.x_interval(tree)
+    plt.plot(graph_values[0], graph_values[1])
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.title("(x+((x+5)^2))")
+    plt.show()
 
 if __name__ == "__main__":
     main()
