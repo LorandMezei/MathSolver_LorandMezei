@@ -3,6 +3,7 @@ from ExpTreeBuilder import ExpTreeBuilder
 from Evaluator import Evaluator
 from Grapher import Grapher
 
+
 def main():
     # Expression examples.
     exp1 = "((cos(2*x)) * (sin(3/y)))"
@@ -15,7 +16,7 @@ def main():
 
     # Tokenize mathematical expression.
     tk = Tokenizer()
-    exp = tk.tokenize_math_exp(exp4)  #<--------------------------------------------------------------------------------
+    exp = tk.tokenize_math_exp(exp2)  #<--------------------------------------------------------------------------------
 
     # Build the expression tree from the tokenized mathematical expression.
     etb = ExpTreeBuilder()

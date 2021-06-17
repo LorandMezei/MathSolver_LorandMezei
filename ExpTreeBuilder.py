@@ -1,5 +1,6 @@
 from pythonds.basic import Stack
 from pythonds.trees import BinaryTree
+from MathFunctions import MathFunctions
 
 class ExpTreeBuilder():
     # https://runestone.academy/runestone/books/published/pythonds/Trees/ParseTree.html
@@ -22,7 +23,7 @@ class ExpTreeBuilder():
                 current_tree = current_tree.getLeftChild()
 
             # If current character is a binary operator.
-            elif is_binary(i):
+            elif MathFunctions.is_binary(i):
                 # Set the current tree's value to i.
                 current_tree.setRootVal(i)
                 # Create an empty tree and assign it to current tree's right child.
@@ -33,7 +34,7 @@ class ExpTreeBuilder():
                 current_tree = current_tree.getRightChild()
 
             # If current string is a unary function.
-            elif is_unary(i):
+            elif MathFunctions.is_unary(i):
                 # Set the current tree's value to i.
                 current_tree.setRootVal(i)
                 # Create an empty tree and assign it to current tree's right child.
@@ -50,7 +51,7 @@ class ExpTreeBuilder():
 
             # If current character is not an operator and not a right parenthesis.
             # is a digit or variable.
-            elif not is_unary(i) and not is_binary(i) and i != ')':
+            elif not MathFunctions.is_unary(i) and not MathFunctions.is_binary(i) and i != ')':
                 # Set the current tree's value to i.
                 current_tree.setRootVal(i)
                 # Take top parent tree out of the stack and move the current tree pointer to point back to that parent.
@@ -58,13 +59,3 @@ class ExpTreeBuilder():
 
         # Return the completed expression tree.
         return current_tree
-
-def is_unary(i):
-    if i in ['sin', 'cos', 'tan', 'arcsin', 'arccos', 'arctan', 'sqrt']:
-        return True
-    return False
-
-def is_binary(i):
-    if i in ['+', '-', '*', '/', '^']:
-        return True
-    return False
