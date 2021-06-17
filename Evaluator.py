@@ -4,14 +4,6 @@ import math
 class Evaluator():
     # https://runestone.academy/runestone/books/published/pythonds/Trees/ParseTree.html
     def evaluate(self, tree):
-        # Dictionary of possible binary operators in an expression.
-        # Stores the character value, and the operator to perform for each character's operator.
-        operators = {'+': operator.add,
-                     '-': operator.sub,
-                     '*': operator.mul,
-                     '/': operator.truediv,
-                     '^': operator.pow,}
-
         # Get the left child of the tree.
         left_child = tree.getLeftChild()
         # Get the right child of the tree.
@@ -20,7 +12,7 @@ class Evaluator():
         # Is an internal node (meaning root value is an operator).
         if left_child and right_child:
             # Select the appropriate operator for the current operator.
-            op = operators[tree.getRootVal()]
+            op = get_binary(tree.getRootVal())
             # Apply the operator to both the left child's value and the right child's value.
             # Recur into left child and right child.
             return op(float(self.evaluate(left_child)), float(self.evaluate(right_child)))
