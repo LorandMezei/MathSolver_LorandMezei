@@ -26,7 +26,7 @@ def main():
     print(value)
 
     # Graph the expression.
-    graph_values = Grapher.x_interval(tree)
+    graph_values = Grapher.x_interval(tree, -100, 100)
     plt.plot(graph_values[0], graph_values[1])
     plt.xlabel("x")
     plt.ylabel("y")
