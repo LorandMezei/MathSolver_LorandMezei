@@ -33,6 +33,7 @@ class Evaluator():
         Return the value of the tree.
         Parameters:
             tree - Binary expression tree that contains variables.
+            vars - Dictionary that maps variables to a digit value.
         """
         # https://runestone.academy/runestone/books/published/pythonds/Trees/ParseTree.html
 
