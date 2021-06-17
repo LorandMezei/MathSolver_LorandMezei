@@ -1,11 +1,15 @@
-import operator
-import math
 from MathFunctions import MathFunctions
 
 
 class Evaluator():
-    # https://runestone.academy/runestone/books/published/pythonds/Trees/ParseTree.html
     def evaluate(self, tree):
+        """
+        Return the value of the tree.
+        Parameters:
+            tree - Binary expression tree that does not contain variables.
+        """
+        # https://runestone.academy/runestone/books/published/pythonds/Trees/ParseTree.html
+
         # Get the left child of the tree.
         left_child = tree.getLeftChild()
         # Get the right child of the tree.
@@ -22,9 +26,14 @@ class Evaluator():
         else:
             return tree.getRootVal()
 
-    # https://runestone.academy/runestone/books/published/pythonds/Trees/ParseTree.html
-    # Evaluate tree with variables.
     def evaluate_vars(self, tree, vars):
+        """
+        Return the value of the tree.
+        Parameters:
+            tree - Binary expression tree that contains variables.
+        """
+        # https://runestone.academy/runestone/books/published/pythonds/Trees/ParseTree.html
+
         # Get the left child of the tree.
         left_child = tree.getLeftChild()
         # Get the right child of the tree.

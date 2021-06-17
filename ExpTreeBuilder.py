@@ -3,9 +3,14 @@ from pythonds.trees import BinaryTree
 from MathFunctions import MathFunctions
 
 class ExpTreeBuilder():
-    # https://runestone.academy/runestone/books/published/pythonds/Trees/ParseTree.html
-    # Build a binary expression tree from a TOKENIZED FULLY PARENTHESIZED mathematical expression.
     def build_exp_tree(self, exp):
+        """
+        Return a binary expression tree from a mathematical expression. Tree retains the original order of operations.
+        Parameters:
+            exp - An array of strings containing the tokens of a fully-parenthesized mathematical expression.
+        """
+        # https://runestone.academy/runestone/books/published/pythonds/Trees/ParseTree.html
+
         parent_stack = Stack()  # Stack to hold the pointers to the current tree's parents.
         current_tree = BinaryTree('')  # Empty string expression tree using a binary tree that will start as the current tree.
         parent_stack.push(current_tree)  # Push the empty expression tree into the parent stack.
