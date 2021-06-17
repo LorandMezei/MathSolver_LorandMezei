@@ -15,7 +15,7 @@ def main():
     exp7 = "(-x)"
 
     # Tokenize mathematical expression.
-    exp = Tokenizer.tokenize_math_exp(exp4)  # <-------------------------------------------------------------------------------
+    exp = Tokenizer.tokenize_math_exp(exp4)  # <------------------------------------------------------------------------
 
     # Build the expression tree from the tokenized mathematical expression.
     tree = ExpTreeBuilder.build_exp_tree(exp)
@@ -24,8 +24,7 @@ def main():
     value = Evaluator.evaluate_vars(tree, {'x': 1})
     print(value)
 
-    #gr = Grapher()
-    #graph_values = gr.x_1to10(tree, ev)
+    #graph_values = Grapher.x_1to10(tree, ev)
     #plt.plot(graph_values[0], graph_values[1])
     #plt.show()
 
