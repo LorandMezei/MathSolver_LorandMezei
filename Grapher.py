@@ -2,7 +2,8 @@ import numpy as np
 
 
 class Grapher():
-    def x_interval(self, tree, ev):
+    @staticmethod
+    def x_interval(tree, ev):
         vars = {'x': 1}
         x = np.array([])
         y = np.array([])

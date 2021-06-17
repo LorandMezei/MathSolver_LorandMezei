@@ -3,7 +3,8 @@ from pythonds.trees import BinaryTree
 from MathFunctions import MathFunctions
 
 class ExpTreeBuilder():
-    def build_exp_tree(self, exp):
+    @staticmethod
+    def build_exp_tree(exp):
         """
         Return a binary expression tree from a mathematical expression. Tree retains the original order of operations.
         Parameters:

@@ -15,16 +15,13 @@ def main():
     exp7 = "(-x)"
 
     # Tokenize mathematical expression.
-    tk = Tokenizer()
-    exp = tk.tokenize_math_exp(exp4)  # <-------------------------------------------------------------------------------
+    exp = Tokenizer.tokenize_math_exp(exp4)  # <-------------------------------------------------------------------------------
 
     # Build the expression tree from the tokenized mathematical expression.
-    etb = ExpTreeBuilder()
-    tree = etb.build_exp_tree(exp)
+    tree = ExpTreeBuilder.build_exp_tree(exp)
 
     # Traverse and evaluate the expression tree in order.
-    ev = Evaluator()
-    value = ev.evaluate_vars(tree, {'x': 1})
+    value = Evaluator.evaluate_vars(tree, {'x': 1})
     print(value)
 
     #gr = Grapher()

@@ -2,7 +2,8 @@ import re
 
 
 class Tokenizer():
-    def tokenize_math_exp(self, exp):
+    @staticmethod
+    def tokenize_math_exp(exp):
         """
         Return an array of strings that contains the tokens of the mathematical expression.
         Parameters:

@@ -2,7 +2,8 @@ from MathFunctions import MathFunctions
 
 
 class Evaluator():
-    def evaluate(self, tree):
+    @staticmethod
+    def evaluate(tree):
         """
         Return the value of the tree.
         Parameters:
@@ -21,12 +22,13 @@ class Evaluator():
             op = MathFunctions.get_binary(tree.getRootVal())
             # Apply the operator to both the left child's value and the right child's value.
             # Recur into left child and right child.
-            return op(float(self.evaluate(left_child)), float(self.evaluate(right_child)))
+            return op(float(Evaluator.evaluate(left_child)), float(Evaluator.evaluate(right_child)))
 
         else:
             return tree.getRootVal()
 
-    def evaluate_vars(self, tree, vars):
+    @staticmethod
+    def evaluate_vars(tree, vars):
         """
         Return the value of the tree.
         Parameters:
@@ -47,7 +49,7 @@ class Evaluator():
                 fun = MathFunctions.get_unary(tree.getRootVal())
                 # Apply the operator to only the right child.
                 # Recur into right child only.
-                return fun(float(self.evaluate_vars(right_child, vars)))
+                return fun(float(Evaluator.evaluate_vars(right_child, vars)))
 
             # Operator is binary.
             elif MathFunctions.is_binary(tree.getRootVal()):
@@ -55,7 +57,7 @@ class Evaluator():
                 op = MathFunctions.get_binary(tree.getRootVal())
                 # Apply the operator to both the left child's value and the right child's value.
                 # Recur into left child and right child.
-                return op(float(self.evaluate_vars(left_child, vars)), float(self.evaluate_vars(right_child, vars)))
+                return op(float(Evaluator.evaluate_vars(left_child, vars)), float(Evaluator.evaluate_vars(right_child, vars)))
 
         # Is a leaf node (meaning root value is not an operator).
         else:
